@@ -129,16 +129,13 @@ neighborhoods.forEach((d, i) => {
 // rest, across bars AND polygons — so hovering either side lights up the other.
 const layerByName = {};
 function emphasize(name, showTip) {
+  // dim the OTHER bars only; choropleth polygons keep their fill — just outline the hovered one
   for (const nm in barByName) barByName[nm].style.opacity = (nm === name) ? "1" : "0.12";
-  for (const nm in layerByName) {
-    const lyr = layerByName[nm];
-    if (nm === name) {
-      lyr.setStyle({ weight: 2.5, color: "#fff", fillOpacity: 0.95 });
-      lyr.bringToFront();
-      if (showTip) lyr.openTooltip(lyr.getCenter());   // show the map popover when hovering a bar
-    } else {
-      lyr.setStyle({ fillOpacity: 0.18 });
-    }
+  const lyr = layerByName[name];
+  if (lyr) {
+    lyr.setStyle({ weight: 2.5, color: "#fff" });
+    lyr.bringToFront();
+    if (showTip) lyr.openTooltip(lyr.getCenter());   // show the map popover when hovering a bar
   }
 }
 function reset() {
